@@ -1,23 +1,25 @@
 {
-  "name": "tabula",
+  "name": "interested-emails",
   "version": "1.0.0",
-  "description": "A stripe payment webhook for my friend's cooking site",
+  "description": "Cloud Function for adding emails of users interested in game",
   "main": "index.js",
   "scripts": {
-    "start": "functions-framework --target=tabulaInstallments"
+    "start": "functions-framework --target=interestedUserEmails"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/arblalock/stripe-webhook.git"
+    "url": "git+https://github.com/arblalock/game-interested-user-emails.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/arblalock/stripe-webhook/issues"
+    "url": "https://github.com/arblalock/game-interested-user-emails/issues"
   },
-  "homepage": "https://github.com/arblalock/stripe-webhook#readme",
+  "homepage": "https://github.com/arblalock/game-interested-user-emails#readme",
   "devDependencies": {
-    "@google-cloud/functions-framework": "^1.2.1",
-    "stripe": "^7.8.0"
+    "@google-cloud/functions-framework": "^1.5.1"
+  },
+  "dependencies": {
+    "mongodb": "^3.5.5"
   }
 }
