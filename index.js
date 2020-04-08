@@ -1,5 +1,13 @@
-import { MongoClient } from 'mongodb'
-const connectMongoDB = () => MongoClient.connect(process.env.MONGODB)
+const mongoose = require('mongoose');
+mongoose.connect(process.env.MONGODB, {useNewUrlParser: true});
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+
+const emailSchema = new mongoose.Schema({
+    email: String
+  }, { collection: 'InterestedUserEmails' });
+
+var emailUser = mongoose.model('email', emailSchema);
 
 exports.interestedUserEmails = async (request, response) => {
     if (request.method !== "POST") {
@@ -11,10 +19,26 @@ exports.interestedUserEmails = async (request, response) => {
     }
 
     var emailPatt = new RegExp(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)
-
-    const emailValid = emailPatt.test(request.body.email)
+    const emailStr = request.body.email;
+    const emailValid = emailPatt.test(emailStr)
     if(emailValid === true){
-        return response.status(200).json({ status: "success" });
+        try{
+            const result = await emailUser.findOne({ email: emailStr }).exec();
+            if(result){
+                return response.status(200).json({ status: "success" });
+            }
+        }
+        catch(err){
+            return response.status(400).send(`Error`);
+        }
+        const newEmail = new emailUser({ email: emailStr })
+        try{
+            await newEmail.save();
+            return response.status(200).json({ status: "success" });
+        }catch(err) {
+            return response.status(400).send(`Error`);
+        }
+        
     }else{
         return response.status(400).send(`Error`);
     }
